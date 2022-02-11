@@ -3,6 +3,7 @@ package com.github.l3nnartt;
 import com.github.l3nnartt.commands.HubCommand;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.event.connection.PreLoginEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
@@ -31,18 +32,22 @@ public class VelocityService {
 
     }
 
-    //@Subscribe
-    //public void onPreLogin(PreLoginEvent event) {
-    //    event.getConnection().getVirtualHost().ifPresent(address -> {
-    //        System.out.println(address.getHostString());
-    //    });
-    //}
+    @Subscribe
+    public void onPreLogin(PreLoginEvent event) {
+        event.getConnection().getVirtualHost().ifPresent(address -> {
+            System.out.println(address.getHostString());
+        });
+    }
 
     @Subscribe
     public void onPingEvent(ProxyPingEvent event) {
         event.getConnection().getVirtualHost().ifPresent(address -> {
             if (address.getHostString().equals("_dc-srv.e42ed11a80fb._minecraft._tcp.cosmeticsmod.team")) {
                 ServerPing ping = event.getPing().asBuilder().description(Component.text("\u00A76cosmeticsmod.com -\u00A7b CosmeticsMod\u00A77 - Server [\u00A7a1.8\u00A77-\u00A7a1.18\u00A77]\u00A7r\n\u00A7c        PVP AREA \u00A7r&\u00A7c SHOWROOM\u00A7r & \u00A7cSTAGE")).favicon(faviconCosmeticsMod).build();
+                event.setPing(ping);
+            }
+            if (address.getHostString().equals("test.cosmeticsmod.de")) {
+                ServerPing ping = event.getPing().asBuilder().description(Component.text("                    \u00a79CosmeticsMod                \u00a7r[\u00a7a1.8\u00a7r-\u00a7a1.18.1\u00a7r]")).favicon(faviconCosmeticsMod).build();
                 event.setPing(ping);
             }
         });
